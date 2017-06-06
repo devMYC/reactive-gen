@@ -1,0 +1,16 @@
+{
+  "lines": 99,
+  "statements": 99,
+  "functions": 99,
+  "branches": 99,
+  "include": [
+    "index.js",
+    "tests/*.js"
+  ],
+  "extension": [ ".js" ],
+  "cache": true,
+  "all": true,
+  "check-coverage": true,
+  "report-dir": "./coverage",
+  "reporter": [ "text", "lcov" ]
+}
