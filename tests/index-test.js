@@ -63,3 +63,23 @@ test('should also finish executing generator function successfully', t => {
   .then(_ => t.pass())
 })
 
+
+test('should get desired value from generator', t => {
+  t.plan(1)
+  const got = []
+  const expected = 18
+  const fn = rxgen(function* (n) {
+    const squared = yield n * n
+    yield squared * 2
+  })
+
+  return new Promise(resolve =>
+    fn(3).subscribe(
+      v => got.push(v),
+      null,
+      () => resolve(got[got.length - 1])
+    )
+  )
+  .then(v => t.true(v === expected))
+})
+

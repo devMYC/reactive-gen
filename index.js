@@ -34,7 +34,7 @@ const next = (gen, subject$, data = undefined) => {
         .catch(e => subject$.error(e))
     } else {
       subject$.next(value)
-      setImmediate(() => next(gen, subject$, data))
+      setImmediate(() => next(gen, subject$, value))
     }
   } catch (e) {
     subject$.error(e)
