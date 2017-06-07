@@ -17,9 +17,9 @@ module.exports = genFn => (...args) => ({
 })
 
 
-const next = (gen, subject$, err = undefined, data = undefined) => {
+const next = (gen, subject$, data = undefined) => {
   try {
-    const { done, value } = err ? { done: true, value: null } : gen.next(data)
+    const { done, value } = gen.next(data)
     if (done) {
       subject$.complete()
       subject$.dispose()
@@ -34,7 +34,7 @@ const next = (gen, subject$, err = undefined, data = undefined) => {
         .catch(e => subject$.error(e))
     } else {
       subject$.next(value)
-      setImmediate(() => next(gen, subject$, err, data))
+      setImmediate(() => next(gen, subject$, data))
     }
   } catch (e) {
     subject$.error(e)

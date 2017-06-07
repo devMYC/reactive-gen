@@ -47,3 +47,19 @@ test('shoud finish executing generator function successfully', t => {
   .then(_ => t.pass())
 })
 
+
+test('should also finish executing generator function successfully', t => {
+  t.plan(1)
+  const fn = rxgen(function* (n) {
+    while (n > 0) {
+      yield n
+      n--
+    }
+  })
+
+  return new Promise(resolve =>
+    fn(3).subscribe(null, null, () => resolve())
+  )
+  .then(_ => t.pass())
+})
+
