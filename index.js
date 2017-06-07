@@ -29,7 +29,7 @@ const next = (gen, subject$, data = undefined) => {
       value
         .then(v => {
           subject$.next(v)
-          setImmediate(() => next(gen, subject$, null, v))
+          setImmediate(() => next(gen, subject$, v))
         })
         .catch(e => subject$.error(e))
     } else {
