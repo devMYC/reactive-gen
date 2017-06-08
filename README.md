@@ -2,10 +2,8 @@
 
 ```javascript
 const fn = rxgen(function* (n) {
-  while (n > 0) {
-    yield n
-    n--
-  }
+  const value = yield Promise.resolve(n * n)
+  yield value * 2
 })
 
 fn(10)
