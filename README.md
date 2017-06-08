@@ -12,4 +12,10 @@ fn(10)
     e => console.error(e),
     _ => console.log('Completed')
   )
+
+/* Output
+> 100
+> 200
+> Completed
+*/
 ```
