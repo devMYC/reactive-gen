@@ -23,6 +23,8 @@ fn(10)
 you can also chain rxjs operators
 
 ```javascript
+import 'rxjs/add/operator/map'
+
 const fn = rxgen(function* (greetings) {
   for (const greet of greetings) {
     yield greet
