@@ -2,6 +2,7 @@
 
 import rxgen from '../'
 import test from 'ava'
+import 'rxjs/add/operator/map'
 
 
 test('should give error when passing invalid param to rxgen', t => {
@@ -81,5 +82,27 @@ test('should get desired value from generator', t => {
     )
   )
   .then(v => t.true(v === expected))
+})
+
+
+test('chaining rxjs operators with rxgen', t => {
+  t.plan(1)
+  const got = []
+  const expected = [ 4, 16 ]
+  const fn = rxgen(function* (n) {
+    const plusOne = yield Promise.resolve(n + 1)
+    yield plusOne * 2
+  })
+
+  return new Promise(resolve =>
+    fn(1)
+      .map(x => x * x)
+      .subscribe(
+        v => got.push(v),
+        null,
+        () => resolve(got)
+      )
+  )
+  .then(v => t.deepEqual(v, expected))
 })
 
