@@ -1,43 +1,39 @@
 'use strict'
 
-const { Subject } = require('rxjs/Subject')
+const { Observable } = require('rxjs/Observable')
 
 
-module.exports = genFn => (...args) => ({
-  subscribe: (onNext, onError, onComplete) => {
-    const subject$ = new Subject()
-    subject$.subscribe(onNext, onError, onComplete)
-    if ( typeof genFn !== 'function' || !isGenerator(genFn()) ) {
-      return subject$.error(
-        new Error(`Expecting generator function, but instead got "${JSON.stringify(genFn) || String(genFn)}"`)
-      )
-    }
-    next( genFn(...args), subject$ )
+module.exports = genFn => (...args) => new Observable(observer$ => {
+  if ( typeof genFn !== 'function' || !isGenerator(genFn()) ) {
+    return observer$.error(
+      new Error(`Expecting generator function, but instead got "${JSON.stringify(genFn) || String(genFn)}"`)
+    )
   }
+  next( genFn(...args), observer$ )
 })
 
 
-const next = (gen, subject$, data = undefined) => {
+const next = (gen, observer$, data = undefined) => {
   try {
     const { done, value } = gen.next(data)
     if (done) {
-      subject$.complete()
-      subject$.dispose()
+      observer$.complete()
+      observer$.dispose()
     }
 
     if ( isPromise(value) ) {
       value
         .then(v => {
-          subject$.next(v)
-          setImmediate(() => next(gen, subject$, v))
+          observer$.next(v)
+          setImmediate(() => next(gen, observer$, v))
         })
-        .catch(e => subject$.error(e))
+        .catch(e => observer$.error(e))
     } else {
-      subject$.next(value)
-      setImmediate(() => next(gen, subject$, value))
+      observer$.next(value)
+      setImmediate(() => next(gen, observer$, value))
     }
   } catch (e) {
-    subject$.error(e)
+    observer$.error(e)
   }
 }
 
