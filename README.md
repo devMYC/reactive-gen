@@ -1,12 +1,14 @@
 # Usage
 
 ```javascript
-const fn = rxgen(function* (n) {
+const RG = require('reactive-gen')
+
+const rg = RG(function* (n) {
   const value = yield Promise.resolve(n * n)
   yield value * 2
 })
 
-fn(10)
+rg(10)
   .subscribe(
     v => console.log(v),
     e => console.error(e),
@@ -23,15 +25,16 @@ fn(10)
 you can also chain rxjs operators
 
 ```javascript
+import RG from 'reactive-gen'
 import 'rxjs/add/operator/map'
 
-const fn = rxgen(function* (greetings) {
+const rg = RG(function* (greetings) {
   for (const greet of greetings) {
     yield greet
   }
 })
 
-fn([ 'Hello', '你好', 'Bonjour' ])
+rg([ 'Hello', '你好', 'Bonjour' ])
   .map(s => s + '!')
   .subscribe(
     s => console.log(s),
